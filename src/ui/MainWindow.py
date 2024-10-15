@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QListWidget, QTextEdit, QLineEdit, QPushButton
 from .Userdialog import Userdialog
 from .Database import Database
 from .MessageFetcher import MessageFetcher
+from ..net.client import Client
 
 
 class MainWindow(QMainWindow):
@@ -13,6 +14,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         entry = Userdialog()
         entry.exec()
+        self.username = entry.getUsername()
         self.setWindowTitle("TreadLess")
         self.setGeometry(100, 100, 800, 600)
 
@@ -44,6 +46,10 @@ class MainWindow(QMainWindow):
         # Инициализируем последний ID
         self.last_message_id = 0
 
+        # TEST
+        self.client = Client(self.username)
+        # TEST
+
         # Запускаем поток для получения сообщений
         self.fetcher = MessageFetcher("db.db", self.last_message_id)
         self.fetcher.new_message.connect(self.display_message)
@@ -52,10 +58,11 @@ class MainWindow(QMainWindow):
     def send_message(self):
 
         message = self.message_input.text().strip()
-        if message:
-            self.chat_window.append(f"Вы: {message}")
-            self.message_input.clear()
-            self.message_input.returnPressed.connect(self.send_message)
+        self.client.send_message("client1", message)
+        # if message:
+        #     self.chat_window.append(f"Вы: {message}")
+        self.message_input.clear()
+        self.message_input.returnPressed.connect(self.send_message)
 
     def display_message(self, message):
         self.chat_window.append(message)

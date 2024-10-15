@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from ui.MainWindow import MainWindow
+from src.ui.MainWindow import MainWindow
 import qdarktheme
-from net.client import Client
+# from src.net.client import Client
 
 
 def main():

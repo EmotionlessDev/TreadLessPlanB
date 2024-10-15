@@ -23,6 +23,7 @@ class Userdialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("User Authentication")
 
+        self.username = str()
         # Создание вкладок для регистрации и входа
         self.tabs = QTabWidget()
         self.login_tab = QWidget()
@@ -82,6 +83,7 @@ class Userdialog(QDialog):
         """Обрабатывает вход пользователя."""
         username = self.login_username_input.text().strip()
         password = self.login_password_input.text().strip()
+        self.username = username
 
         if not username or not password:
             QMessageBox.warning(self, "Input Error", "Both fields are required!")
@@ -108,6 +110,7 @@ class Userdialog(QDialog):
         username = self.register_username_input.text().strip()
         password = self.register_password_input.text().strip()
 
+        self.username = username
         if not username or not password:
             QMessageBox.warning(self, "Input Error", "Both fields are required!")
             return
@@ -149,3 +152,6 @@ class Userdialog(QDialog):
             )
         except Exception as e:
             QMessageBox.critical(self, "Database Error", str(e))
+
+    def getUsername(self):
+        return self.username
