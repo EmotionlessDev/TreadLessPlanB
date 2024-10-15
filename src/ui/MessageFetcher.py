@@ -19,7 +19,14 @@ class MessageFetcher(QThread):
         while self._running:
             try:
                 # Получаем новые сообщения с ID больше последнего
-                query = "SELECT id, sender_id, message FROM messages WHERE id > ? ORDER BY id ASC"
+                # query = "SELECT id, sender_id, message FROM messages WHERE id > ? ORDER BY id ASC"
+                query = """
+                SELECT messages.id, users.username, messages.message
+                FROM messages
+                JOIN users ON messages.sender_id = users.id
+                WHERE messages.id > ?
+                ORDER BY messages.id ASC
+                """
                 data = db.fetch_data(query, (self.last_id,))
                 for row in data:
                     msg_id, sender, message = row
@@ -35,4 +42,3 @@ class MessageFetcher(QThread):
     def stop(self):
         self._running = False
         self.wait()
-
