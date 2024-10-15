@@ -28,8 +28,8 @@ def handle_client(client_socket: socket.SocketType, username: str, address: str)
             request = json.loads(data)
             action = request.get("action")
             if action == "send_msg":
-                recipient = request.get("recipient")
-                recipient_id = user_id[recipient]
+                # recipient = request.get("recipient")
+                # recipient_id = user_id[recipient]
                 msg = request.get("msg")
                 sender_id = user_id[username]
 
@@ -37,28 +37,28 @@ def handle_client(client_socket: socket.SocketType, username: str, address: str)
                     response = {"status": "error", "msg": "Неизвестный отправитель"}
                     client_socket.send(json.dumps(response).encode())
                     continue
-                if not recipient_id:
-                    response = {"status": "error", "msg": "Неизвестный получатель"}
-                    client_socket.send(json.dumps(response).encode())
-                    continue
+                # if not recipient_id:
+                #     response = {"status": "error", "msg": "Неизвестный получатель"}
+                #     client_socket.send(json.dumps(response).encode())
+                #     continue
                 db.connect("db.db")
-                db.insert_data("messages", (None, recipient_id, sender_id, msg))
+                db.insert_data("messages", (None, sender_id, sender_id, msg))
                 db.close()
                 response = {"status": "success", "msg": "Сообщение отправлено"}
 
-                if recipient in active_clients:
-                    recipient_socket = active_clients[recipient]
-                    msg_data = {
-                        "action": "rcv_msg",
-                        "sender": username,
-                        "msg": msg,
-                    }
-                    try:
-                        recipient_socket.send(json.dumps(msg_data).encode())
-                    except Exception as e:
-                        print(
-                            f"Не удалось отправить сообщение пользователю {recipient}: {e}"
-                        )
+                # if recipient in active_clients:
+                #     recipient_socket = active_clients[recipient]
+                # msg_data = {
+                #     "action": "rcv_msg",
+                #     "sender": username,
+                #     "msg": msg,
+                # }
+                # try:
+                #     recipient_socket.send(json.dumps(msg_data).encode())
+                # except Exception as e:
+                #     print(
+                #         f"Не удалось отправить сообщение пользователю {recipient}: {e}"
+                #     )
             else:
                 response = {"status": "error", "msg": "Неизвестное действие"}
                 client_socket.send(json.dumps(response).encode())

@@ -44,12 +44,12 @@ class Client:
                 msg = response.get("msg")
                 print(f"{status} : {msg}")
 
-    def send_message(self, recipient: str, msg: str):
+    def send_message(self, msg: str):
         # Формируем запрос, имя пользователя -> сообщение
         # "action": "send_msg" or "rcv_msg"
         # "sender": username
         # "msg": message
-        data = json.dumps({"action": "send_msg", "recipient": recipient, "msg": msg})
+        data = json.dumps({"action": "send_msg", "msg": msg})
         self.client_socket.send(data.encode())
 
     def close_connection(self):

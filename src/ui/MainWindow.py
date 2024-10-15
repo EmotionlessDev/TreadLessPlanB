@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
     def send_message(self):
 
         message = self.message_input.text().strip()
-        self.client.send_message("client1", message)
+        self.client.send_message(message)
         # if message:
         #     self.chat_window.append(f"Вы: {message}")
         self.message_input.clear()
